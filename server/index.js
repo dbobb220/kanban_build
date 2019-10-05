@@ -20,6 +20,17 @@ db.once('open', function() {
   console.log(`Database connected`);
 });
 
+if (process.env.NODE_ENV === 'production') {
+  // Exprees will serve up production assets
+  app.use(express.static(path.join(__dirname, "../client/build")));
+  
+  // Express serve up index.html file if it doesn't recognize route
+  app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, "../client/build"));
+  });
+  } else{
+  app.use(express.static(path.join(__dirname, "../client/build")));
+  }
 
 app.use(bodyParser.json());
 app.use(express.static('public'));
@@ -34,19 +45,6 @@ app.get('/ping', function (req, res) {
 app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
-
-
-if (process.env.NODE_ENV === 'production') {
-  // Exprees will serve up production assets
-  app.use(express.static(path.join(__dirname, "../client/build")));
-  
-  // Express serve up index.html file if it doesn't recognize route
-  app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, "../client/build"));
-  });
-  } else{
-  app.use(express.static(path.join(__dirname, "../client/build")));
-  }
 
 app.listen(process.env.PORT || port, () => console.log(`Server listening on port ${port}!`));
  
