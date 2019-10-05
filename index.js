@@ -5,10 +5,10 @@ const port = 8080;
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const path = require("path");
-const authMiddleWare = require("./authentication").authentication;
-const tasksRoutes = require("./tasks/TaskRoutes");
-const usersRoutes = require("./users/UserRoutes");
-const sessionRoutes = require("./session/SessionRoute");
+const authMiddleWare = require("./server/authentication").authentication;
+const tasksRoutes = require("./server/tasks/TaskRoutes");
+const usersRoutes = require("./server/users/UserRoutes");
+const sessionRoutes = require("./server/session/SessionRoute");
 
 dotenv.config();
 
