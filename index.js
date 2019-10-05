@@ -29,6 +29,18 @@ app.use(usersRoutes);
 app.use(sessionRoutes);
 app.use(tasksRoutes);
 
+if (process.env.NODE_ENV === "production") {
+  // Exprees will serve up production assets
+  app.use(express.static(path.join(__dirname, ".public")));
+
+  // Express serve up index.html file if it doesn't recognize route
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "public"));
+  });
+} else {
+  app.use(express.static(path.join(__dirname, "public")));
+}
+
 app.get("/ping", function(req, res) {
   return res.send("pong");
 });
