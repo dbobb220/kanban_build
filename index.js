@@ -5,10 +5,10 @@ const port = 8080;
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const path = require("path");
-const authMiddleWare = require("./authentication").authentication;
-const tasksRoutes = require("./tasks/TaskRoutes");
-const usersRoutes = require("./users/UserRoutes");
-const sessionRoutes = require("../session/SessionRoute");
+const authMiddleWare = require("./server/authentication").authentication;
+const tasksRoutes = require("./server/tasks/TaskRoutes");
+const usersRoutes = require("./server/users/UserRoutes");
+const sessionRoutes = require("./server/session/SessionRoute");
 
 dotenv.config();
 
@@ -22,18 +22,6 @@ db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", function() {
   console.log(`Database connected`);
 });
-
-if (process.env.NODE_ENV === "production") {
-  // Exprees will serve up production assets
-  app.use(express.static(path.join(__dirname, "public")));
-
-  // Express serve up index.html file if it doesn't recognize route
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "public"));
-  });
-} else {
-  app.use(express.static(path.join(__dirname, "public")));
-}
 
 app.use(bodyParser.json());
 app.use(express.static("public"));

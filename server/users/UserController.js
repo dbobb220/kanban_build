@@ -10,16 +10,14 @@ exports.signup = signup = (req, res) => {
         if(existingUser) {
             res.send('Username taken')
         } else {
-            let hash = bcrypt.hashSync(password, saltRounds, function(err, hash) {
-                if(err) {console.log(err)}
-                if(hash) {return hash}
-            });
+            let hash = bcrypt.hash(password, 8);
             let userObject = {username:username, password:hash, name: name}
             let newUser = new User(userObject);
+            newUser.save(()=>res.send('user saved'))
             const timestamp = new Date().getTime();
             const userObj = {userId: user.id, iat: timestamp}
             const token = jwt.sign(userObj, `${process.env.PASS_KEY}`)
-            newUser.save(()=>res.send(token))
+            res.json(token)
         }
     })
 }
