@@ -5,10 +5,10 @@ const port = 8080;
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const path = require("path");
-const authMiddleWare = require("./server/authentication").authentication;
-const tasksRoutes = require("./server/tasks/TaskRoutes");
-const usersRoutes = require("./server/users/UserRoutes");
-const sessionRoutes = require("./server/session/SessionRoute");
+const authRoutes = require("./server/routes/AuthRoutes");
+const tasksRoutes = require("./server/routes/TaskRoutes");
+const usersRoutes = require("./server/routes/UserRoutes");
+const sessionRoutes = require("./server/routes/SessionRoute");
 
 dotenv.config();
 
@@ -23,31 +23,21 @@ db.once("open", function() {
   console.log(`Database connected`);
 });
 
-app.use(bodyParser.json());
 app.use(express.static("public"));
+app.use(bodyParser.json());
 app.use(usersRoutes);
 app.use(sessionRoutes);
+app.use(authRoutes);
+
 app.use(tasksRoutes);
-
-// if (process.env.NODE_ENV === "production") {
-//   // Exprees will serve up production assets
-//   app.use(express.static(path.join(__dirname, ".public")));
-
-//   // Express serve up index.html file if it doesn't recognize route
-//   app.get("*", (req, res) => {
-//     res.sendFile(path.join(__dirname, "public"));
-//   });
-// } else {
-//   app.use(express.static(path.join(__dirname, "public")));
-// }
 
 app.get("/ping", function(req, res) {
   return res.send("pong");
 });
 
-// app.get("/", function(req, res) {
-//   res.sendFile(path.join(__dirname, "build", "index.html"));
-// });
+app.get("*", function(req, res) {
+  res.sendFile(path.join(__dirname + "/public/index.html"));
+});
 
 app.listen(process.env.PORT || port, () =>
   console.log(`Server listening on port ${port}!`)
